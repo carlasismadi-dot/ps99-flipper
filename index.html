@@ -154,7 +154,6 @@
             const existsJson = await existsRes.json();
             
             if (rapJson.status === "ok" && existsJson.status === "ok") {
-                // FIXED: Lowered threshold so lower value eggs, hype gifts, and items show up perfectly
                 const rawRapData = rapJson.data.filter(item => item.value && item.value >= 1000);
                 
                 combinedDatabaseBuffer = rawRapData.map(rapItem => {
@@ -234,6 +233,8 @@
             if (buyTarget > budgetSelection) continue;
 
             const lowerName = name.toLowerCase();
+            const lowerCategory = category.toLowerCase();
+            
             let matchedTier = "Standard";
             if (lowerName.includes("huge")) matchedTier = "Huge";
             else if (lowerName.includes("titanic")) matchedTier = "Titanic";
@@ -241,10 +242,11 @@
 
             if (tierSelection !== "ALL" && matchedTier !== tierSelection) continue;
             
+            // FIXED: Standardized case strings down to handle singular API response schemas seamlessly
             if (categorySelection !== "ALL") {
                 if (categorySelection === "Eggs_Boxes_Lootboxes") {
-                    if (category !== "Eggs" && category !== "Boxes" && category !== "Lootboxes") continue;
-                } else if (category !== categorySelection) {
+                    if (!lowerCategory.includes("egg") && !lowerCategory.includes("box") && !lowerCategory.includes("lootbox")) continue;
+                } else if (category.toLowerCase() !== categorySelection.toLowerCase()) {
                     continue;
                 }
             }
@@ -304,7 +306,6 @@
         }
     }
 
-    // FIXED: Formatted strictly as a safe functional declaration to prevent console crashes
     function formatVal(n) {
         if (n >= 1000000000) return (n / 1000000000).toFixed(2) + 'B';
         if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
