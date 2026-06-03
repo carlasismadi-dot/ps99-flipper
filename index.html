@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Plaza Flipper & Market Matrix</title>
+    <link rel="icon" href="data:,">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: #08090d; color: #e2e8f0; padding: 25px; }
         .wrapper { max-width: 1500px; margin: 0 auto; }
         
         header { 
-            display: flex; justify-content: space-between; align-items: center; \
-            background: #10101a; padding: 20px; border-radius: 12px; \
-            border: 1px solid #1c1c2e; margin-bottom: 20px; \
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #10101a; padding: 20px; border-radius: 12px; 
+            border: 1px solid #1c1c2e; margin-bottom: 20px; 
         }
         header h1 { color: #3b82f6; font-size: 1.5rem; }
         .status { font-size: 0.85rem; background: #1c1c2e; padding: 6px 12px; border-radius: 20px; border: 1px solid #2b2b40; }
 
-        /* Control Console Grid */
         .console-panel {
             background: #10101a; border: 1px solid #1c1c2e; border-radius: 12px;
             padding: 20px; margin-bottom: 20px; display: grid;
@@ -30,22 +30,15 @@
         }
         .console-panel input:focus, .console-panel select:focus { border-color: #3b82f6; }
 
-        /* Universal Matrix Table */
         .matrix-table { width: 100%; border-collapse: collapse; background: #10101a; border-radius: 12px; overflow: hidden; border: 1px solid #1c1c2e; }
         .matrix-table th { background-color: #161624; color: #94a3b8; text-align: left; padding: 15px 20px; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #1c1c2e; }
         .matrix-table td { padding: 14px 20px; border-bottom: 1px solid #1c1c2e; vertical-align: middle; }
         .matrix-table tr { transition: background-color 0.2s; }
         .matrix-table tr:hover { background-color: #131322; }
 
-        /* NEON SNIPE TARGET ALERT FIELD */
         .snipe-alert-row {
             background-color: rgba(239, 68, 68, 0.08) !important;
             border: 2px solid #ef4444 !important;
-            animation: pulseBg 2s infinite alternate;
-        }
-        @keyframes pulseBg {
-            0% { background-color: rgba(239, 68, 68, 0.05); }
-            100% { background-color: rgba(239, 68, 68, 0.15); }
         }
         .snipe-badge {
             background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; 
@@ -161,7 +154,8 @@
             const existsJson = await existsRes.json();
             
             if (rapJson.status === "ok" && existsJson.status === "ok") {
-                const rawRapData = rapJson.data.filter(item => item.value && item.value >= 50000);
+                // FIXED: Lowered threshold so lower value eggs, hype gifts, and items show up perfectly
+                const rawRapData = rapJson.data.filter(item => item.value && item.value >= 1000);
                 
                 combinedDatabaseBuffer = rawRapData.map(rapItem => {
                     const match = existsJson.data.find(e => 
@@ -247,7 +241,6 @@
 
             if (tierSelection !== "ALL" && matchedTier !== tierSelection) continue;
             
-            // FIXED: Route checks accurately whether selecting ALL, custom combined group, or single category string
             if (categorySelection !== "ALL") {
                 if (categorySelection === "Eggs_Boxes_Lootboxes") {
                     if (category !== "Eggs" && category !== "Boxes" && category !== "Lootboxes") continue;
@@ -311,7 +304,8 @@
         }
     }
 
-    fn = formatVal = (n) => {
+    // FIXED: Formatted strictly as a safe functional declaration to prevent console crashes
+    function formatVal(n) {
         if (n >= 1000000000) return (n / 1000000000).toFixed(2) + 'B';
         if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
         if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
