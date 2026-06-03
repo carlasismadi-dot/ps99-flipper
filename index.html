@@ -92,9 +92,10 @@
             <select id="categoryFilter" onchange="renderTable()">
                 <option value="ALL">-- All Categories --</option>
                 <option value="Pet">Pets Only</option>
+                <option value="Egg">Eggs Only</option>
+                <option value="Lootbox">Lootboxes / Gifts</option>
                 <option value="Enchant">Enchants</option>
                 <option value="Potion">Potions</option>
-                <option value="Eggs_Boxes_Lootboxes">Lootboxes / Eggs</option>
                 <option value="MiscItems">Misc Items</option>
             </select>
         </div>
@@ -242,10 +243,12 @@
 
             if (tierSelection !== "ALL" && matchedTier !== tierSelection) continue;
             
-            // FIXED: Standardized case strings down to handle singular API response schemas seamlessly
+            // FIXED: Standardized item categories to catch singular/plural variations correctly
             if (categorySelection !== "ALL") {
-                if (categorySelection === "Eggs_Boxes_Lootboxes") {
-                    if (!lowerCategory.includes("egg") && !lowerCategory.includes("box") && !lowerCategory.includes("lootbox")) continue;
+                if (categorySelection === "Egg") {
+                    if (!lowerCategory.includes("egg")) continue;
+                } else if (categorySelection === "Lootbox") {
+                    if (!lowerCategory.includes("box") && !lowerCategory.includes("lootbox") && !lowerCategory.includes("gift")) continue;
                 } else if (category.toLowerCase() !== categorySelection.toLowerCase()) {
                     continue;
                 }
